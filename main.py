@@ -59,7 +59,7 @@ class SnykAIBomScanner:
         target_id = target['id']
         target_name = target['attributes'].get('display_name', 'Unknown Name')
         
-        print(f"Processing Target: {target_name} ({target_id})")
+        print(f"Processing target {target_name}")
 
         # 1. Create the AI-BOM Job
         try:
