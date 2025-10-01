@@ -17,6 +17,7 @@ Perfect for identifying which of your Snyk organization's targets use specific A
 - Python 3.8 or higher
 - Snyk account with API access
 - Snyk organization with imported repositories
+- Workspaces Enabled
 
 ## Installation (using uv)
 
