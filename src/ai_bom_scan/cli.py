@@ -281,9 +281,11 @@ def scan(
         sys.exit(1)
 
 @cli.command()
-def search() -> None:
+@click.argument("search_keyword", type=str)
+@click.option("--debug", is_flag=True, help="Enable debug output")
+def search(search_keyword: str, debug: bool) -> None:
     """Search for AI models in Snyk targets"""
-    search_command()
+    search_command(search_keyword, debug)
 
 
 def main() -> None:
@@ -293,12 +295,12 @@ def main() -> None:
 
 def scan_main() -> None:
     """Direct entry point for the scan command"""
-    sys.argv = ["ai-bom-scan", "scan"] + sys.argv[1:]
+    sys.argv = ["aibom", "scan"] + sys.argv[1:]
     cli()
 
 def search_main() -> None:
     """Direct entry point for the scan command"""
-    sys.argv = ["ai-bom-scan", "search"] + sys.argv[1:]
+    sys.argv = ["aibom", "search"] + sys.argv[1:]
     cli()
 
 

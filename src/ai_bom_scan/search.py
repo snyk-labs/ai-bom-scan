@@ -146,17 +146,11 @@ class SnykAIBomScanner:
 
 
 # --- Main Execution ---
-def search():
+def search(search_keyword: str = None, debug: bool = False):
     """Main entry point for the console script."""
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Scan Snyk organization targets for AI-BOM keywords")
-    parser.add_argument("search_keyword", help="The keyword(s) to search for in the AI-BOM (comma-separated for multiple terms)")
-    parser.add_argument("--debug", action="store_true", help="Enable debug output")
-    args = parser.parse_args()
-    
     # Setup logging
     logging.basicConfig(
-        level=logging.DEBUG if args.debug else logging.INFO,
+        level=logging.DEBUG if debug else logging.INFO,
         format='%(message)s'
     )
     
@@ -179,7 +173,8 @@ def search():
     # scanner = SnykAIBomScanner(SNYK_API_URL, SNYK_ORG_ID, SNYK_TOKEN)
     scanner = SnykAIBomAPIClient(config)
     
-    search_keyword = args.search_keyword
+    # if not search_keyword:
+    #     search_keyword = args.search_keyword
     
     # Format the search terms for display
     search_terms_display = [term.strip() for term in search_keyword.split(',')]
