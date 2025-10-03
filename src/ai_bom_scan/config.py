@@ -27,7 +27,7 @@ class Config:
         """Post-initialization to handle environment variable fallbacks"""
         # Use environment variables as fallbacks
         if not self.api_token:
-            self.api_token = os.getenv("SNYK_API_TOKEN")
+            self.api_token = os.getenv("SNYK_TOKEN")
             
         if not self.org_id:
             self.org_id = os.getenv("SNYK_ORG_ID")
@@ -55,7 +55,7 @@ class Config:
     def validate(self) -> None:
         """Validate that required configuration is present"""
         if not self.api_token:
-            raise ValueError("API token is required. Set SNYK_API_TOKEN environment variable.")
+            raise ValueError("API token is required. Set SNYK_TOKEN environment variable.")
             
         if not self.org_id and not self.group_id:
             raise ValueError("Organization ID or Group ID is required. Set SNYK_ORG_ID or SNYK_GROUP_ID environment variable.")

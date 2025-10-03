@@ -22,8 +22,7 @@ dependencies = [
 
 [project.scripts]
 ai-bom-scan = "main:main"
-scan = "ai_bom_scan.cli:scan_main"
-search = "main:main"
+aibom = "ai_bom_scan.cli:main"
 
 [tool.setuptools]
 py-modules = ["main"]

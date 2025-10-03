@@ -66,8 +66,8 @@ def load_policy_file(policy_file_path: str) -> Set[str]:
 @click.version_option()
 @click.option(
     "--api-token",
-    envvar="SNYK_API_TOKEN",
-    help="Snyk API token (can also be set via SNYK_API_TOKEN env var)",
+    envvar="SNYK_TOKEN",
+    help="Snyk API token (can also be set via SNYK_TOKEN env var)",
 )
 @click.option(
     "--org-id",
@@ -181,7 +181,7 @@ def scan(
     # Validate required configuration
     if not config.api_token:
         console.print("[bold red]Error:[/bold red] API token is required. "
-                     "Set SNYK_API_TOKEN environment variable or use --api-token option.")
+                     "Set SNYK_TOKEN environment variable or use --api-token option.")
         sys.exit(1)
         
     if not config.org_id and not config.group_id:

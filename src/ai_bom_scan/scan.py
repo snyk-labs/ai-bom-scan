@@ -122,7 +122,7 @@ def scan(
     # Validate required configuration
     if not config.api_token:
         console.print("[bold red]Error:[/bold red] API token is required. "
-                     "Set SNYK_API_TOKEN environment variable or use --api-token option.")
+                     "Set SNYK_TOKEN environment variable or use --api-token option.")
         sys.exit(1)
         
     if not config.org_id and not config.group_id:
