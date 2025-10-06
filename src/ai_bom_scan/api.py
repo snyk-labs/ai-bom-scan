@@ -43,13 +43,13 @@ class SnykAIBomAPIClient:
         Fetches all organizations from a Snyk group, handling pagination.
         """
         orgs = []
-        url = f"{self.api_url}/rest/groups/{self.group_id}/orgs?version={self.api_version}&limit=10"
+        url = f"{self.api_url}/rest/groups/{self.group_id}/orgs?version={self.api_version}&limit=100"
         while url:
             response = requests.get(url, headers=self.headers)
             response.raise_for_status()
             data = response.json()
             orgs.extend(data.get('data', []))
-            
+
             # Get the URL for the next page. If it doesn't exist, the loop will end.
             next_link = data.get('links', {}).get('next')
             if next_link:
