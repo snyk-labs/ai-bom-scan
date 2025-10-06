@@ -211,7 +211,7 @@ def scan(
         supported_targets = []
         for target in all_targets:
             integration_type = target.get('relationships', {}).get('integration', {}).get('data', {}).get('attributes', {}).get('integration_type')
-            if integration_type in ['github', 'github-enterprise', 'github-cloud-app', 'github-server-app', 'gitlab', 'azure-repos', 'bitbucket-cloud', 'bitbucket-server', 'bitbucket-cloud-app']:
+            if integration_type in config.supported_integrations:
                 supported_targets.append(target)
         
         console.print(f"[bold cyan]📊 Processing {len(supported_targets)} supported targets...[/bold cyan]")
@@ -232,7 +232,7 @@ def scan(
                 progress.update(main_task, description=f"Processing: {target_name[:30]}...")
                 
                 integration_type = target.get('relationships', {}).get('integration', {}).get('data', {}).get('attributes', {}).get('integration_type')
-                if integration_type in ['github', 'github-enterprise', 'github-cloud-app', 'github-server-app', 'gitlab', 'azure-repos', 'bitbucket-cloud', 'bitbucket-server', 'bitbucket-cloud-app']:
+                if integration_type in config.supported_integrations:
                     aibom_data = client.process_target(target)
                     if aibom_data:
                         components = aibom_data.get('data', {}).get('attributes', {}).get('components', [])

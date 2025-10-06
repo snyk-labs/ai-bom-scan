@@ -58,7 +58,7 @@ def search(search_keyword: str = None, debug: bool = False):
     for target in all_targets:
         # Get integration type from the nested structure
         integration_type = target.get('relationships', {}).get('integration', {}).get('data', {}).get('attributes', {}).get('integration_type')
-        if integration_type in ['github', 'github-enterprise', 'github-cloud-app', 'github-server-app', 'gitlab', 'azure-repos', 'bitbucket-cloud', 'bitbucket-server', 'bitbucket-cloud-app']:
+        if integration_type in config.supported_integrations:
             # We now call our complete function from steps 3 & 4
             matched_terms = scanner.process_target_and_search(target, search_keyword)
             if matched_terms: 

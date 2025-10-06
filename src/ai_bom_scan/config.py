@@ -3,7 +3,7 @@ Configuration module for ai-bom-scan
 """
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -22,6 +22,7 @@ class Config:
     api_url: str = "https://api.snyk.io"
     api_version: str = "2025-07-22"
     debug: bool = False
+    supported_integrations: list[str] = field(default_factory=lambda: ['github', 'github-enterprise', 'github-cloud-app', 'github-server-app', 'gitlab', 'azure-repos', 'bitbucket-cloud', 'bitbucket-server', 'bitbucket-cloud-app'])
     
     def __post_init__(self) -> None:
         """Post-initialization to handle environment variable fallbacks"""
