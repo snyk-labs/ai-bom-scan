@@ -14,10 +14,18 @@ authors = [
 requires-python = ">=3.8"
 dependencies = [
     "requests>=2.25.0",
+    "click>=8.0.0",
+    "rich>=10.0.0",
+    "pyyaml>=5.0.0",
+    "python-dotenv>=0.19.0",
 ]
 
 [project.scripts]
 ai-bom-scan = "main:main"
+aibom = "ai_bom_scan.cli:main"
 
 [tool.setuptools]
 py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+where = ["src", "."]
