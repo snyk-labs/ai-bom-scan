@@ -43,13 +43,19 @@ class SnykAIBomAPIClient:
         Fetches all organizations from a Snyk group, handling pagination.
         """
         orgs = []
-        url = f"{self.api_url}/rest/groups/{self.group_id}/orgs?version={self.api_version}&limit=100"
+        url = f"{self.api_url}/rest/groups/{self.group_id}/orgs?version={self.api_version}&limit=10"
         while url:
             response = requests.get(url, headers=self.headers)
             response.raise_for_status()
             data = response.json()
             orgs.extend(data.get('data', []))
-            url = data.get('links', {}).get('next')
+            
+            # Get the URL for the next page. If it doesn't exist, the loop will end.
+            next_link = data.get('links', {}).get('next')
+            if next_link:
+                url = f"{self.api_url}{next_link}"
+            else:
+                url = None
         return orgs
         
     def get_all_targets_from_org(self, org: Optional[dict]):
@@ -114,7 +120,7 @@ class SnykAIBomAPIClient:
             # Some targets might not be compatible; we'll skip them.
             if response.status_code == 422: # Unprocessable Entity
                  logging.debug(f"Skipping '{target_name}': Incompatible target type.")
-                 return []
+                 return {}
 
             response.raise_for_status()
             post_data = response.json()
@@ -126,8 +132,8 @@ class SnykAIBomAPIClient:
             logging.debug(f"  > Job created. Initial status: {status}")
 
         except requests.exceptions.RequestException as e:
-            logging.debug(f"  > Error creating job for '{target_name}': {e}", file=sys.stderr)
-            return []
+            logging.debug(f"  > Error creating job for '{target_name}': {e}")
+            return {}
 
         # 2. Poll for Job Completion
         while status not in ["finished", "errored"]:
@@ -142,12 +148,12 @@ class SnykAIBomAPIClient:
                 status = response_data['data']['attributes']['status']
                 logging.debug(f"  > Polling... status is now: {status}")
             except requests.exceptions.RequestException as e:
-                logging.debug(f"  > Error polling job for '{target_name}': {e}", file=sys.stderr)
-                return []
+                logging.debug(f"  > Error polling job for '{target_name}': {e}")
+                return {}
 
         if status == "errored":
             print(f"  > Job failed for '{target_name}'.", file=sys.stderr)
-            return []
+            return {}
 
         # 3. Get the final AI-BOM and search for the keyword
         # Note that the job_url redirects to the bom get url when it is finished
@@ -161,8 +167,8 @@ class SnykAIBomAPIClient:
             return final_response.json()
                 
         except requests.exceptions.RequestException as e:
-            logging.debug(f"  > Error fetching final BOM for '{target_name}': {e}", file=sys.stderr)
-            return []
+            logging.debug(f"  > Error fetching final BOM for '{target_name}': {e}")
+            return {}
 
     def process_target_and_search(self, target, search_keyword):
         aibom = self.process_target(target)

@@ -235,7 +235,8 @@ def scan(
                 if integration_type in ['github', 'github-enterprise', 'github-cloud-app', 'github-server-app', 'gitlab', 'azure-repos', 'bitbucket-cloud', 'bitbucket-server', 'bitbucket-cloud-app']:
                     aibom_data = client.process_target(target)
                     if aibom_data:
-                        component_count = len(aibom_data['data']['attributes']['components']) - 1
+                        components = aibom_data.get('data', {}).get('attributes', {}).get('components', [])
+                        component_count = len(components) - 1 if components else 0
                         console.print(f"  [bold green]✅[/bold green] {target_name}: [bold yellow]{component_count}[/bold yellow] AI components")
                         all_aiboms.append({ 
                             'target_name': target_name,
@@ -293,13 +294,8 @@ def main() -> None:
     cli()
 
 
-def scan_main() -> None:
-    """Direct entry point for the scan command"""
-    sys.argv = ["aibom", "scan"] + sys.argv[1:]
-    cli()
-
 def search_main() -> None:
-    """Direct entry point for the scan command"""
+    """Direct entry point for the search command"""
     sys.argv = ["aibom", "search"] + sys.argv[1:]
     cli()
 
