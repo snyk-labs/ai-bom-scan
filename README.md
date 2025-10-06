@@ -26,6 +26,9 @@ uv sync
 
 # Install the project
 uv pip install -e .
+
+# Install and run with uvx
+uv tool install git+https://github.com/snyk-labs/ai-bom-scan
 ```
 
 ## Configuration
@@ -47,20 +50,88 @@ export SNYK_API_URL="https://api.snyk.io"
 
 ## Usage
 
-### Command Line (after installation)
+### Search
 
 ```bash
 # Basic usage
-ai-bom-scan "deepseek"
+aibom search "deepseek"
 
 # Search for multiple terms with OR logic (comma-separated)
-ai-bom-scan "deepseek,openai"
+aibom search "deepseek,openai"
 
 # Enable debug output
-ai-bom-scan --debug "pytorch"
+aibom search --debug "pytorch"
 
 # Get help
-ai-bom-scan --help
+aibom search --help
+```
+
+### Scan
+
+```bash
+# Basic usage
+aibom scan
+
+# Specify path to HTML output file
+aibom scan --html report.html
+
+# Specify path to JSON output file
+aibom scan --json output.json
+
+# Group by AI component (default behavior)
+aibom scan --group-by component
+
+# Group by repository - shows each repository with its AI components grouped together
+aibom scan --group-by repo
+
+# Generate HTML report grouped by repository
+aibom scan --group-by repo --html report.html
+
+# Get help
+aibom scan --help
+```
+
+Available grouping options:
+- component (default): Groups output by AI component name
+- repo: Groups output by repository, showing each repository with its AI components listed underneath
+
+
+You can use a YAML policy file to define forbidden AI models that should be flagged during the scan:
+
+```bash
+# Use policy file to validate against forbidden models
+aibom scan --policy-file policy.yaml
+```
+
+#### Policy File Format
+
+Create a YAML file with the following structure:
+
+```yaml
+reject:
+  - claude-3-5-sonnet-20240620
+  - gpt-3.5-turbo
+  - gpt-4
+  - llama-2-7b
+```
+
+An example policy file (`policy-example.yaml`) is included in the repository for reference.
+
+#### Output Format
+
+Using --output or -o can be used to output a JSON file. The AIBOM results are returned in the standard Snyk API JSON format:
+
+```
+{
+    "all_aibom_data": [
+        {
+            "target_name": "repo_org/name",
+            "aibom_data": {
+              ...
+            }
+        }
+    ]
+}
 ```
 
 ### Using uv run (without installation)
@@ -77,7 +148,7 @@ uv run python main.py --debug "deepseek"
 
 ### Search for single term
 ```bash
-ai-bom-scan "deepseek"
+aibom search "deepseek"
 ```
 
 Output:
@@ -97,7 +168,7 @@ Scan Complete
 
 ### Search for multiple terms (OR logic)
 ```bash
-ai-bom-scan "deepseek,openai,anthropic"
+aibom search "deepseek,openai,anthropic"
 ```
 
 Output:
@@ -121,7 +192,7 @@ Scan Complete
 
 ### Search with debug information
 ```bash
-ai-bom-scan --debug "openai,claude"
+aibom search --debug "openai,claude"
 ```
 
 This will show detailed information about:
@@ -161,16 +232,6 @@ uv pip install -e .
 
 # Or with pip
 pip install -e .
-```
-
-### Project Structure
-
-```
-ai-bom-scan/
-├── main.py           # Main application code
-├── pyproject.toml    # Project configuration
-├── uv.lock          # Dependency lock file
-└── README.md        # This file
 ```
 
 ### Making Changes
