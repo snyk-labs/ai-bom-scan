@@ -28,7 +28,7 @@ uv sync
 uv pip install -e .
 
 # Install and run with uvx
-uv tool install git+https://github.com/snyk-labs/aibom-tools
+uv tool install git+https://github.com/snyk-labs/ai-bom-scan
 ```
 
 ## Configuration
